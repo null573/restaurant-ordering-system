@@ -1,0 +1,20 @@
+{
+  "name": "restaurant-ordering",
+  "version": "1.0.0",
+  "private": true,
+  "description": "多租户餐厅扫码点餐系统 - Cloudflare Workers + Vue PWA + Capacitor",
+  "scripts": {
+    "dev:worker": "pnpm --filter worker dev",
+    "dev:web": "pnpm --filter web dev",
+    "build:worker": "pnpm --filter worker build",
+    "build:web": "pnpm --filter web build",
+    "deploy:worker": "pnpm --filter worker deploy",
+    "deploy:web": "pnpm --filter web deploy"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

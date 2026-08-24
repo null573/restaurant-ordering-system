@@ -1,0 +1,42 @@
+name: Build App
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Web
+        run: pnpm --filter web build
+
+      - name: Install Capacitor
+        run: pnpm --filter app install
+
+      - name: Sync Capacitor
+        run: cd packages/app && npx cap sync
+
+      - name: Build Android
+        working-directory: packages/app
+        run: npx cap build android --keystorepath ${{ secrets.ANDROID_KEYSTORE_PATH }} --keystorepass ${{ secrets.ANDROID_KEYSTORE_PASS }} --keystorealias ${{ secrets.ANDROID_KEY_ALIAS }} --keystorealiaspass ${{ secrets.ANDROID_KEY_ALIAS_PASS }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: packages/app/android/app/build/outputs/apk/**/*.apk

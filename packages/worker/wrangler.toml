@@ -1,0 +1,42 @@
+name = "restaurant-worker"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ===== Cloudflare D1 数据库 (共享库 + tenant_id 行级隔离) =====
+[[d1_databases]]
+binding = "DB"
+database_name = "restaurant-db"
+database_id = ""  # 部署时通过 wrangler d1 create 获取后填入
+
+# ===== KV (会话/缓存) =====
+[[kv_namespaces]]
+binding = "KV"
+id = ""  # 部署时通过 wrangler kv namespace create 获取后填入
+
+# ===== R2 (菜品图片存储) =====
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "restaurant-images"
+
+# ===== Durable Objects (实时订单同步房间) =====
+[[durable_objects.bindings]]
+name = "DESK_ROOM"
+class_name = "DeskRoomDO"
+
+[[durable_objects.migrations]]
+tag = "v1"
+new_sqlite_classes = ["DeskRoomDO"]
+
+# ===== 环境变量 (非敏感) =====
+[vars]
+PUBLIC_R2_DOMAIN = "https://img.order.local"
+APP_BASE_URL = "https://order.local"
+# 默认试用天数和价格
+DEFAULT_TRIAL_DAYS = "7"
+DEFAULT_PLAN_PRICE_FEN = "9900"     # 99元/月
+DEFAULT_PLAN_CYCLE_DAYS = "30"
+
+# ===== Cron 定时任务 =====
+[triggers]
+crons = ["0 3 * * *"]  # 每天凌晨3点检查订阅到期
