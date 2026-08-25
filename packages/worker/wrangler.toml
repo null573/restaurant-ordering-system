@@ -4,17 +4,16 @@ compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 
 # ===== Cloudflare D1 数据库 =====
-# 需要先在 Cloudflare Dashboard 创建 D1 数据库，然后填入 database_id
-# 创建方法: Workers & Pages → D1 → Create database → 命名为 restaurant-db
 [[d1_databases]]
 binding = "DB"
 database_name = "restaurant-db"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "ce0f6ba7-f3c5-4f6d-a01b-4bdbef642cdd"
 
 # ===== KV (会话/缓存) =====
 [[kv_namespaces]]
 binding = "KV"
 id = "60ae6b0cdcba48b68ed79661aa8129b5"
+preview_id = "30a73286a4b44f76af4e89c74da77784"
 
 # ===== R2 (菜品图片存储) =====
 [[r2_buckets]]
@@ -26,21 +25,20 @@ bucket_name = "restaurant-images"
 name = "DESK_ROOM"
 class_name = "DeskRoomDO"
 
-[[durable_objects.migrations]]
+# Durable Objects 迁移 (顶层 migrations)
+[[migrations]]
 tag = "v1"
 new_sqlite_classes = ["DeskRoomDO"]
 
-# ===== 环境变量 (非敏感) =====
+# ===== 环境变量 =====
 [vars]
-# R2 图片访问域名 (可绑定自定义域名，或用 r2.dev 测试域名)
 PUBLIC_R2_DOMAIN = "https://restaurant-images.zbeve.workers.dev"
-# 前端应用地址
 APP_BASE_URL = "https://restaurant-web-9d9.pages.dev"
-# 默认试用天数和价格
 DEFAULT_TRIAL_DAYS = "7"
-DEFAULT_PLAN_PRICE_FEN = "9900"     # 99元/月
+DEFAULT_PLAN_PRICE_FEN = "9900"
 DEFAULT_PLAN_CYCLE_DAYS = "30"
+JWT_SECRET = "r0s-rest-jwt-s3cret-2024-xyz789abc"
 
 # ===== Cron 定时任务 =====
 [triggers]
-crons = ["0 3 * * *"]  # 每天凌晨3点检查订阅到期
+crons = ["0 3 * * *"]
