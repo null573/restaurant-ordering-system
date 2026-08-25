@@ -3,16 +3,18 @@ main = "src/index.ts"
 compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 
-# ===== Cloudflare D1 数据库 (共享库 + tenant_id 行级隔离) =====
+# ===== Cloudflare D1 数据库 =====
+# 需要先在 Cloudflare Dashboard 创建 D1 数据库，然后填入 database_id
+# 创建方法: Workers & Pages → D1 → Create database → 命名为 restaurant-db
 [[d1_databases]]
 binding = "DB"
 database_name = "restaurant-db"
-database_id = ""  # 部署时通过 wrangler d1 create 获取后填入
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
 
 # ===== KV (会话/缓存) =====
 [[kv_namespaces]]
 binding = "KV"
-id = ""  # 部署时通过 wrangler kv namespace create 获取后填入
+id = "60ae6b0cdcba48b68ed79661aa8129b5"
 
 # ===== R2 (菜品图片存储) =====
 [[r2_buckets]]
@@ -30,8 +32,10 @@ new_sqlite_classes = ["DeskRoomDO"]
 
 # ===== 环境变量 (非敏感) =====
 [vars]
-PUBLIC_R2_DOMAIN = "https://img.order.local"
-APP_BASE_URL = "https://order.local"
+# R2 图片访问域名 (可绑定自定义域名，或用 r2.dev 测试域名)
+PUBLIC_R2_DOMAIN = "https://restaurant-images.zbeve.workers.dev"
+# 前端应用地址
+APP_BASE_URL = "https://restaurant-web-9d9.pages.dev"
 # 默认试用天数和价格
 DEFAULT_TRIAL_DAYS = "7"
 DEFAULT_PLAN_PRICE_FEN = "9900"     # 99元/月
